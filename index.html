@@ -1,330 +1,53 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-	<title>Word Puzzle</title>
-	<!-- <link href="../lib/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet"> -->
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	<style>
-		#container{
-			border: 10px solid ;
-			border-radius: 25px;
-			padding: 20px;
-		/*	padding-left: 15px;
-			padding-right: 15px;*/
-			overflow:  auto;
-			list-style-position:inside;
-			margin-left: auto;
-  			margin-right: auto;
-  			margin-top:60px;
-  			display: block;
-  			font-size: 20px;
-  			width:45%;
-  			font-family: "Times New Roman", Times, serif;
-		}
-		#displayPanel{
-			border: 3px solid #888;
-			background-color: #bbb;
-			padding-bottom: 15px;
-			padding-top:5px;
-			margin-bottom: 15px;
-			border-radius: 15px;
-		}
-		#wordPuzzle {
-			text-align: center;
-			/*border-top: 8px solid #ff6666 ;
-			border-left: 8px solid #ff6666 ;
-			border-right : 15px solid #800000 ;
-			border-bottom: 15px solid #800000 ;*/
-		}
-		#timer{
-			border:solid 3px black;
-			border-radius: 10px;
-			width: 40px;
-			background-color: white;
-			text-align: center;
-			color: black;
-		}
-		#guessPlease{
-			border:solid 5px #44aa33;
-			border-radius: 10px;
-			margin: 10px;
-			padding: 10px; 
-			margin-bottom:0px;
-			background-color: #ddd;
-		}
-		/*#lineSeparator{
-				padding: 0px;
-				width: 100%;
-				height: 2px;
-				margin: 10px;
-				background-color:grey;
-				margin-left:0;
-				margin-right:0;  
-		}*/
-		#guesses{
-			border:5px solid #44aa33; 
-			border-radius: 5px;
-			margin-bottom: 5px;
-			width: 60%; 
-			background-color: #ddd;
-			color: #333;
-		}
-		.topic.active{
- 			 background-color: #999999;
- 			 /*opacity: 0.4;*/
- 			 color: white;
- 			/* padding: 5px;*/
- 			 border-radius: 10%; 		
-		}
-		.topic{
-			 padding: 3px;
-			 margin-left:  14px;
-			 margin-right:  13px;
-			 margin-bottom: 5px;
-			 border:0;
-			 background-color: white;
-			 color:purple;
-			 cursor: pointer;
-		}
-		.controlbtn{
-			border-radius: 5px;
-			margin-right:  7px;
-		}
-		#points{
-			margin-top:5px;
-		}
-		#scaleMeter{
-			height:10px;
-			width: 100%;
-			/*background-color: mediumseagreen;*/
-			border-radius:3px;
-			background-image: linear-gradient(to right, #33ff33 0%,  #ff4d4d 0%);
-			border:solid 2px #666;
-		}
-	</style>
-</head>
-<body >
-		<div id="container">
-			<form id="wordPuzzle"  method="post">
-				<div id="displayPanel">
-					<label style="margin-right:60%;" >Solve the Puzzle &nbsp</label>
-					<label  id="timer">&#9201;</label>
-					<h3 id="guessPlease"></h3>
-				</div>	
-				<!-- <hr id="lineSeparator"/>  -->
-				<input type="text" placeholder="Type Here" id='guesses' autocomplete="off"/><br/>
-					<span class="topic active" id="iq">IQ</span>
-					<span class="topic" id="math">Math</span>
-					<span class="topic" id="gk">GK</span>
-					<!-- <span class="topic" id="geography">Geography</span>
+  <head>
+    <title>Word Puzzle</title>
+    <!-- <link href="../lib/bootstrap-3.3.7-dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="container">
+      <form id="wordPuzzle" method="post">
+        <div id="displayPanel">
+          <div class="displayHeader">
+            <span>Solve the Puzzle</span>
+            <label id="timer">⏱</label>
+          </div>
+          <h3 id="guessPlease"></h3>
+        </div>
+        <!-- <hr id="lineSeparator"/>  -->
+        <input
+          type="text"
+          placeholder="Type Here"
+          id="guesses"
+          autocomplete="off"
+        /><br />
+        <span class="topic active" id="iq">IQ</span>
+        <span class="topic" id="math">Math</span>
+        <span class="topic" id="gk">GK</span>
+        <!-- <span class="topic" id="geography">Geography</span>
 					<span class="topic" id="history">History</span>
-					<span class="topic" id="sports">Sport</span> --><br/>
-				<button class="controlbtn"type="submit" id="submitGuess">Submit</button>
-				<button class="controlbtn"id="playGame">Play</button>  <!-- form msut have onlyone btn -->
-				<button class="controlbtn"id="skip">Skip</button><br/>
-				<button class="controlbtn"id="restart">Play Again</button>
-				<!-- <button class="control"id="stop">stop</button> --><br/>
-				<label id="points">Points :</label>
-			</form>
-			<div id="scaleMeter"></div>		
-	</div>		
-	<script>
-		function $(key){
-			return document.getElementById(key);
-		}
-		document.body.style.padding="30px";
-		// document.body.style.backgroundColor="silver";
-		var i=0;
-		var tempoText="";
-		var text="Solve The Puzzle";
-		setInterval(()=>{
-			tempoText=tempoText+text.charAt(i);
-			document.title=tempoText;
-			i++;
-			if(i==text.length){
-				i=0;
-				tempoText="";
-			}
-		},300);
-	//______________________________________________________________________________________
-		
-		var mathQn=["Sum of all interior angles in a rectangle ?",
-					"Interior angle of a regular pentagon ?",
-					"Sum of all numbers from 1 to 10 ? ",
-					"C.S.A. of cube having length 10 unit ?",
-					"Number of vertices in Octahedron ?",
-					"Eccentricity of a Parabola ?",
-					"Of what value ,its 30% is 600 ?",
-					"Solve (cos30cosec30sin60cot45) ?",
-					"Next number of the given series 1,3,6,10,__ ?" ];
-		var mathAns=["720","108","55","400","6","1","2000","2","15"];
-		var gkQn=["Everest ht. in meter ?","Biggest bird ?",
-					"Longest river ?","Fastest animal ?",
-					"Biggest planet ?","Diameter of Earth in Km ?",
-					"Velocity of sound in air (m/s) ?",
-					"21st element in periodic table ?","Red planet ?"];
-		var gkAns=["8848","ostrich","nile","cheetah","jupiter","12742","332","scandium","mars"];
-		var iqQn=["j _ v _","c _ a _ s","2 _ 2 _",
-						"25*25","p h _ _ o","s _ _ i p t",
-						"5!","value of Pi","8 sides"];
-		var iqAns=["java","class","2020","625","photo","script","120","3.14","octagon"];
-		var guessPlease=["j _ v _","c _ a _ s","2 _ 2 _",
-						"25*25","p h _ _ o","s _ _ i p t",
-						"5!","value of Pi","8 sides"];
-		var correctWord=["java","class","2020","625","photo","script","120","3.14","octagon"];
-		const maxQn=correctWord.length;
-		const maxTime=20;
-		let timer=maxTime+6;
-		let qnNo=0;
-		let points=0;
-		let totalTime=0;
-		var scalevalue=0;
-		$("guessPlease").innerHTML="Let's Play";
-		swap=(qn,ans)=>{
-			if(timer>maxTime){
-				for (let i=0;i<=8;i++){
-					guessPlease[i]=qn[i];				
-					correctWord[i]=ans[i];
-				}
-			}
-		}
-		$("gk").onclick=()=>{									//select gk questions.
-			swap(gkQn,gkAns);
-			return false;
-		}
-		$("math").onclick=()=>{										//select math questions.
-			swap(mathQn,mathAns);
-			return false;	
-		}
-		$("iq").onclick=()=>{										//select iq questions.
-			swap(iqQn,iqAns);
-			return false;	
-		}
-		var topic = document.getElementsByClassName("topic");//nav bar click active mode.
-		for (var i = 0; i < topic.length; i++) {
-		  topic[i].addEventListener("click", function() {
-		  var current = document.getElementsByClassName("active");
-		  current[0].className = current[0].className.replace(" active", "");
-		  this.className += " active";
-		  });
-		}
-		
-		getRndInteger=(min, max)=>{  						//jumble with both included ie.0/8
- 			 return Math.floor(Math.random() * (max - min + 1) ) + min;
-		}
-		jumble=()=>{										//jumble questions.
-			let len=guessPlease.length;
-			for (let i=0;i<=len-1;i++){
-				let ran=getRndInteger(0,len-1);
-				let temp=0;
-				console.log(ran);
-				temp=guessPlease[i]
-				guessPlease[i]=guessPlease[ran];
-				guessPlease[ran]=temp;	
-				temp=correctWord[i];				
-				correctWord[i]=correctWord[ran];
-				correctWord[ran]=temp;
-			}
-		}
-		$("playGame").onclick=()=>{
-			$("playGame").disabled=true;
-			jumble();							//jaumble questions
-			var seet=setInterval(()=>{
-				console.log(guessPlease);
-				console.log(correctWord);
-				$("timer").innerHTML=timer+" s";
-				if(timer<=maxTime+4 && timer>maxTime+1 && timer!=maxTime){	//time priod for count down
-					$("guessPlease").innerHTML="Starts on :&nbsp"+(timer-maxTime-1);
-				}else if(timer==maxTime+1){			//time period for displaying "Go"
-					$("guessPlease").innerHTML="Go";
-					totalTime=0;
-				}else if(timer<=maxTime+6 && timer>=maxTime+5){		//time period for displaying "Get Ready"
-					$("guessPlease").innerHTML="Get Ready!!";
-				}
-				if(timer<=maxTime){
-					totalTime++;
-				}
-				if(timer<=maxTime+6 && timer>maxTime ){				//for reseting the scale meter value
-					scalevalue=0;
-					$("points").innerHTML="Points :";
-				}
-				if(qnNo==maxQn){
-					qnNo=0;
-				}
-
-				$('wordPuzzle').onsubmit=()=>{			//on submiting the answers
-					if(($("guesses").value).toLowerCase()==correctWord[qnNo] && timer<=maxTime){
-							$("guessPlease").innerHTML="Correct  &#x2714;";
-							scalevalue++;
-							timer=maxTime;
-							qnNo++;
-							points++;
-							$("points").innerHTML="Points :"+points;
-							$("guesses").value='';
-							if(qnNo==maxQn){
-								// clearInterval(seet);
-								$("points").innerHTML="Thank You for palying. <br/> You Scored : "+points+" out of "+maxQn+" in "+totalTime+" sec.";
-								$("guessPlease").innerHTML="Socre :&nbsp"+points;
-								if(points==maxQn){
-									$("guessPlease").innerHTML="BINGO !!";
-								}
-								points=0;
-								timer=maxTime+79;		//40 time period of showing the Score result
-							}
-					}else{
-							$("guesses").value="";
-					}
-					return false;
-				}
-				$("restart").onclick=()=>{				//while re starting the game
-						qnNo=0;
-						timer=maxTime+6;				//+6 meas time-interval f countdown and get ready
-						points=0;
-						scalevalue=0;
-						$("points").innerHTML="Points :";
-						$("guesses").value='';
-						jumble();
-						totalTime==0;
-					return false;
-				}
-				$("skip").onclick=()=>{						//while skipping questions
-					if(timer<=maxTime){
-						qnNo=qnNo+1;						//+1 skip to next question
-						timer=maxTime;
-						$("guesses").value="";
-						if(qnNo==maxQn){
-							$("points").innerHTML="Thank You for palying. <br/> You Scored : "+points+" out of "+maxQn+" in "+totalTime+" sec.";
-							$("guessPlease").innerHTML="Socre :&nbsp"+points;
-							points=0;
-							qnNo=0;
-							timer=maxTime+79; 				//40 time period of showing the Score result
-						}
-					}
-					return false;
-				}
-				if(timer==0){								//when the timer runs out
-					timer=maxTime+1;
-					$("guessPlease").innerHTML="Time Out !!";
-					$("guesses").value='';
-					qnNo++;
-				}
-				if(timer==maxTime){							//loading first question 
-					$("guessPlease").innerHTML=guessPlease[qnNo];
-				}
-				if(qnNo==maxQn){							//when the question number reaches to the last
-					$("points").innerHTML="Thank You for palying. <br/> You Scored : "+points+" out of "+maxQn+" in "+totalTime+" sec.";
-					$("guessPlease").innerHTML="Socre :&nbsp"+points;
-					points=0;
-					timer=maxTime+79;						//40 time period of showing the Score result
-				}
-				//scalemeter css
-				// $("scaleMeter").style.width=(points*12)+"%";//scale for rise in correct answer
-					$("scaleMeter").style.backgroundImage= "linear-gradient(to right,#33ff33 "+(scalevalue*11.1)+"%, #ff4d4d "+(scalevalue*11.12)+"%)";
-					// $("scaleMeter").style.backgroundImage= "linear-gradient(to right, rgba(255,0,0,0.11), rgba(255,0,0,"+(points*0.11)+"))";
-				timer--;
-			},1000);
-			return false;
-		}
-	</script>	
-</body>
+					<span class="topic" id="sports">Sport</span> --><br />
+        <button class="controlbtn" type="submit" id="submitGuess">
+          Submit
+        </button>
+        <button class="controlbtn" type="button" id="playGame">Play</button>
+        <!-- form msut have onlyone btn -->
+        <button class="controlbtn" type="button" id="skip">Skip</button><br />
+        <button class="controlbtn" type="button" id="restart">
+          Play Again
+        </button>
+        <!-- <button class="control"id="stop">stop</button> --><br />
+        <label id="points">Points :</label>
+      </form>
+      <div id="scaleMeter"></div>
+    </div>
+    <script src="script.js" type="module"></script>
+  </body>
 </html>
